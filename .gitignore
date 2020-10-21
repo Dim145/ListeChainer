@@ -5,3 +5,6 @@
 *.exe
 *.cbp
 *.o
+
+#idea
+.idea
