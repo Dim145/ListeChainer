@@ -1,4 +1,5 @@
 #include "liste.h"
+#include "Erreurs.h"
 
 template<typename T>
 class Element
@@ -99,7 +100,7 @@ template<typename T>
 void Liste<T>::supprimer(Iterateur<T> &pos)
 {
     // si la position est null, c'est que l'on est a la fin...
-    if (pos.position == nullptr) throw exception();
+    if (pos.position == nullptr) throw Erreurs("Null pointer exeption: la liste est vide ou le dernier élément est atteint.");
 
     Element<T> *posTmp = pos.position;
 
@@ -151,7 +152,7 @@ Liste<T>::~Liste()
 template<typename T>
 Liste<T> & Liste<T>::operator=(const Liste &l)
 {
-    if( &l == this ) return  *this;
+    if( &l == this ) return *this;
 
     try
     {
@@ -176,7 +177,7 @@ Iterateur<T> Iterateur<T>::operator++(int a)
     it.dernier = this->dernier;
 
     if (this->position != nullptr )position = position->suivant;
-    else                           throw exception();
+    else                           throw Erreurs("sortie de la liste! la fin est déjà atteinte.");
 
     return it;
 }
@@ -185,7 +186,7 @@ template<typename T>
 Iterateur<T> Iterateur<T>::operator++()
 {
     if (this->position != nullptr )position = position->suivant;
-    else                           throw exception();
+    else                           throw Erreurs("sortie de la liste! la fin est déjà atteinte.");
 
     return *this;
 }
@@ -196,14 +197,16 @@ T &Iterateur<T>::operator*() const
     if( position != nullptr )
         return position->valeur;
     else
-        throw exception();
+        throw Erreurs("Null pointer execption!");
 }
 
 template<typename T>
 Iterateur<T> Iterateur<T>::operator--()
 {
     //Si la position est a null, on considère qu'on est a la fin de la liste.
-    position = position == nullptr ? position = dernier : position->precedent == nullptr ? throw exception() : position->precedent;
+    if( position == nullptr )                 position = dernier;
+    else if( position->precedent == nullptr ) throw Erreurs("sortie de la liste! le début de la liste est déjà atteint");
+    else                                      position = position->precedent;
 
     return *this;
 }
@@ -216,7 +219,9 @@ Iterateur<T> Iterateur<T>::operator--(int)
     it.position = this->position;
     it.dernier = this->dernier;
 
-    position = position == nullptr ? position = dernier : position->precedent == nullptr ? throw  exception(): position->precedent;
+    if( position == nullptr )                 position = dernier;
+    else if( position->precedent == nullptr ) throw Erreurs("sortie de la liste! le début de la liste est déjà atteint");
+    else                                      position = position->precedent;
 
     return it;
 }
