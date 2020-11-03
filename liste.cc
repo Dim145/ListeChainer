@@ -1,75 +1,88 @@
 #include "liste.h"
 
-template<typename  T> class Element
+template<typename T>
+class Element
 {
 public:
-   // constructeur
-   Element<T>(const T& s);
+    // constructeur
+    Element<T>(const T &s);
 
 private:
-   T valeur;
+    T valeur;
 
-   // pointeurs vers les voisins
-   Element<T>* precedent;
-   Element<T>* suivant;
+    // pointeurs vers les voisins
+    Element<T> *precedent;
+    Element<T> *suivant;
 
-friend class Liste<T>;
-friend class Iterateur<T>;
+    friend class Liste<T>;
+
+    friend class Iterateur<T>;
 };
 
 
-template<typename  T> Element<T>::Element(const T& s) {
-   valeur = s;
-   precedent = suivant = NULL;
-}
-
-
-template<typename  T> Iterateur<T>::Iterateur() {
-   position = dernier = NULL;
-}
-
-template<typename  T> Liste<T>::Liste() {
-   premier = dernier = NULL;
-}
-
-
-template<typename  T> Iterateur<T> Liste<T>::debut() const {
-   Iterateur<T> it;
-   it.position = premier;
-   it.dernier = dernier;
-   return it;
-}
-
-
-template<typename  T> Iterateur<T> Liste<T>::fin() const {
-   Iterateur<T> it;
-   it.position = NULL;
-   it.dernier = dernier;
-   return it;
-}
-
-template<typename  T> void Liste<T>::ajouter(const T &s)
+template<typename T>
+Element<T>::Element(const T &s)
 {
-    auto * e = new Element<T>(s);
+    valeur = s;
+    precedent = suivant = NULL;
+}
+
+template<typename T>
+Iterateur<T>::Iterateur()
+{
+    position = dernier = NULL;
+}
+
+template<typename T>
+Liste<T>::Liste()
+{
+    premier = dernier = NULL;
+}
+
+
+template<typename T>
+Iterateur<T> Liste<T>::debut() const
+{
+    Iterateur<T> it;
+    it.position = premier;
+    it.dernier = dernier;
+    return it;
+}
+
+
+template<typename T>
+Iterateur<T> Liste<T>::fin() const
+{
+    Iterateur<T> it;
+    it.position = NULL;
+    it.dernier = dernier;
+    return it;
+}
+
+template<typename T>
+void Liste<T>::ajouter(const T &s)
+{
+    auto *e = new Element<T>(s);
 
     e->suivant = nullptr;
     e->precedent = this->dernier;
 
-    if( this->premier != nullptr ) this->dernier->suivant = e;
-    else                           this->premier = e;
+    if (this->premier != nullptr) this->dernier->suivant = e;
+    else this->premier = e;
 
     this->dernier = e;
 }
 
-template<typename  T> void Liste<T>::inserer(Iterateur<T> &pos, const T &s)
+template<typename T>
+void Liste<T>::inserer(Iterateur<T> &pos, const T &s)
 {
-    if( pos.position == nullptr )
+    if (pos.position == nullptr)
     {
         ajouter(s);
         return;
     }
 
-    auto * elt = new Element<T>(s);
+    auto *elt = new Element<T>(s);
 
     elt->suivant = pos.position;
     pos.position = pos.position == nullptr ? pos.dernier : pos.position->precedent;
@@ -82,36 +95,51 @@ template<typename  T> void Liste<T>::inserer(Iterateur<T> &pos, const T &s)
     pos.position = elt;
 }
 
-template<typename  T> void Liste<T>::supprimer(Iterateur<T> &pos)
+template<typename T>
+void Liste<T>::supprimer(Iterateur<T> &pos)
 {
-    if( pos.position == nullptr ) return;
+    // si la position est null, c'est que l'on est a la fin...
+    if (pos.position == nullptr) throw exception();
 
-    Element<T> * posTmp = pos.position;
+    Element<T> *posTmp = pos.position;
 
-    if ( posTmp->precedent != nullptr )
+    if (posTmp->precedent != nullptr)
         posTmp->precedent->suivant = posTmp->suivant;
 
-    if( posTmp->suivant != nullptr )
+    if (posTmp->suivant != nullptr)
         posTmp->suivant->precedent = posTmp->precedent;
 
-    if( pos.position == pos.dernier )
+    if (pos.position == pos.dernier)
+    {
         pos.dernier = posTmp->precedent;
+        this->dernier = pos.dernier;
+    }
 
-    if( this->premier == pos.position )
-        this->premier = pos.position->suivant;
+    if (this->premier == pos.position)
+        this->premier = posTmp->suivant;
 
     pos.position = posTmp->suivant;
 
     delete posTmp;
 }
 
-template<typename  T> Liste<T>::Liste(Liste<T> & liste)
+template<typename T>
+Liste<T>::Liste(Liste<T> &liste)
 {
-    this->premier = liste.premier;
-    this->dernier = liste.dernier;
+    try
+    {
+        for (Iterateur<T> i = liste.debut(); i != liste.fin(); i++)
+            if( i.position != nullptr )
+                this->ajouter(*i);
+    }
+    catch (exception& e)
+    {
+
+    }
 }
 
-template<typename  T> Liste<T>::~Liste()
+template<typename T>
+Liste<T>::~Liste()
 {
     for (Iterateur<T> i = this->debut(); i != this->fin(); i++)
         free(i.position);
@@ -120,63 +148,87 @@ template<typename  T> Liste<T>::~Liste()
     this->dernier = nullptr;
 }
 
-template<typename  T> Liste<T>& Liste<T>::operator=(const Liste & l)
+template<typename T>
+Liste<T> & Liste<T>::operator=(const Liste &l)
 {
-    for( Iterateur<T> i = l.debut(); i != l.fin(); i++)
-        this->ajouter(i.position->valeur);
+    if( &l == this ) return  *this;
+
+    try
+    {
+        for (Iterateur<T> i = l.debut(); i != l.fin(); i++)
+            if( i.position != nullptr )
+                this->ajouter(*i);
+    }
+    catch (exception& e)
+    {
+
+    }
 
     return *this;
 }
 
-template<typename  T> Iterateur<T> Iterateur<T>::operator++(int a)
+template<typename T>
+Iterateur<T> Iterateur<T>::operator++(int a)
 {
     Iterateur it;
 
     it.position = this->position;
-    it.dernier  = this->dernier;
+    it.dernier = this->dernier;
 
-    if( this->position != nullptr ) position = position->suivant;
+    if (this->position != nullptr )position = position->suivant;
+    else                           throw exception();
 
     return it;
 }
 
-template<typename  T> Iterateur<T> Iterateur<T>::operator++()
+template<typename T>
+Iterateur<T> Iterateur<T>::operator++()
 {
-    if( this->position != nullptr ) position = position->suivant;
+    if (this->position != nullptr )position = position->suivant;
+    else                           throw exception();
 
     return *this;
 }
 
-template<typename  T> T& Iterateur<T>::operator*() const
+template<typename T>
+T &Iterateur<T>::operator*() const
 {
-    return position->valeur;
+    if( position != nullptr )
+        return position->valeur;
+    else
+        throw exception();
 }
 
-template<typename  T> Iterateur<T> Iterateur<T>::operator--()
+template<typename T>
+Iterateur<T> Iterateur<T>::operator--()
 {
-    position = position == nullptr ? position : position->precedent;
+    //Si la position est a null, on considère qu'on est a la fin de la liste.
+    position = position == nullptr ? position = dernier : position->precedent == nullptr ? throw exception() : position->precedent;
 
     return *this;
 }
 
-template<typename  T> Iterateur<T> Iterateur<T>::operator--(int)
+template<typename T>
+Iterateur<T> Iterateur<T>::operator--(int)
 {
     Iterateur it;
 
     it.position = this->position;
-    it.dernier  = this->dernier;
+    it.dernier = this->dernier;
 
-    position = position == nullptr ? dernier : position->precedent;
+    position = position == nullptr ? position = dernier : position->precedent == nullptr ? throw  exception(): position->precedent;
 
     return it;
 }
 
-template<typename  T> bool Iterateur<T>::operator==(const Iterateur & b) const
+template<typename T>
+bool Iterateur<T>::operator==(const Iterateur &b) const
 {
     return this->position == b.position;
 }
 
-template<typename  T> bool Iterateur<T>::operator!=(const Iterateur & b) const
+template<typename T>
+bool Iterateur<T>::operator!=(const Iterateur &b) const
 {
     return !operator==(b);
 }

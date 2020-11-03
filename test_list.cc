@@ -1,11 +1,12 @@
 #include <string>
 #include <list>
 #include <iostream>
-#include "liste.h"
+#include "liste.cc"
 
 using namespace std;
 
-int main() {
+int main()
+{
     list<string> personnel;
 
     // ajouter 4 elements
@@ -16,7 +17,9 @@ int main() {
 
     // ajouter un element a la quatrieme position
     list<string>::iterator pos = personnel.begin();
-    pos++; pos++; pos++;
+    pos++;
+    pos++;
+    pos++;
     personnel.insert(pos, "Sage Stephane");
 
     // supprimer l'element a la deuxieme position
@@ -46,7 +49,7 @@ int main() {
 
     Iterateur<string> pos2;
 
-    for( pos2 = liste.debut(); pos2 != liste.fin(); pos2++ )
+    for (pos2 = liste.debut(); pos2 != liste.fin(); pos2++)
         cout << "val: " << *pos2 << endl;
 
     cout << "\n--parcourt inverse sans \"I'm the first\"--\n" << endl;
@@ -64,7 +67,7 @@ int main() {
     pos3++;
     pos3++;
 
-    for(; pos3 != liste.debut(); pos3-- )
+    for (; pos3 != liste.debut(); pos3--)
         cout << "val: " << *pos3 << endl;
     cout << "val: " << *pos3 << endl;
 
@@ -72,7 +75,7 @@ int main() {
 
     Iterateur<string> pos4;
 
-    for( pos4 = liste.debut(); pos4 != liste.fin(); pos4++ )
+    for (pos4 = liste.debut(); pos4 != liste.fin(); pos4++)
         cout << "val: " << *pos4 << endl;
 
     return 0;
