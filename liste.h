@@ -24,6 +24,7 @@ public:
     ~Liste<T>();
 
     Liste<T> &operator=(const Liste &);
+    bool operator==(const Liste<T>&);
 
     // ajouter s a la fin de la liste
     void ajouter(const T &s);

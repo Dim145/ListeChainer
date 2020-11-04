@@ -110,7 +110,7 @@ int main()
     printf("Ajout de int dans une liste de char: ");
     try
     {
-        listeChar.ajouter(29);
+        listeChar.ajouter(84);
         printf("Effectuer\n");
     }
     catch (exception& e)
@@ -234,6 +234,40 @@ int main()
         cout << *itTmpInt << " ";
     printf("\n");
 
+    printf("\n----- Egalité des itérateurs et éléments -----\n");
+
+    printf("\nOn as trois liste qui contiennent toutes la même choses.\n");
+    printf("La troisieme est construite par recopie de la 1, et la seconde est juste construite de la même façon.\n");
+
+    listeInt = listeSecond;
+
+    printf("liste 1 = ");
+    for ( itTmpInt = listeInt.debut(); itTmpInt != listeInt.fin(); itTmpInt++)
+        cout << *itTmpInt << " ";
+    printf("\nliste2 = ");
+    for ( itTmpInt = listeSecond.debut(); itTmpInt != listeSecond.fin(); itTmpInt++)
+        cout << *itTmpInt << " ";
+    printf("\n");
+
+    printf("\nliste1 == liste2 -> %s\n", listeInt == listeSecond ? "true" : "false");
+
+    printf("On ajoute 20 a la fin de la liste 1 et on recommence:\n");
+    listeInt.ajouter(20);
+    printf("liste1 == liste2 -> %s\n", listeInt == listeSecond ? "true" : "false");
+
+    itTmpInt = listeInt.debut();
+    itInt    = listeSecond.debut();
+
+    printf("\nPour 2 itérateurs, pointant tous 2 sur la premiere case de la liste 1 et 2:\n");
+    printf("itérateur1 == itérateur2 -> %s\n", itTmpInt == itInt ? "true" : "false");
+
+    printf("On incrémente l'itérateur 2 de 1 et on compare: \n");
+    itInt++;
+    printf("itérateur1 == itérateur2 -> %s\n", itTmpInt == itInt ? "true" : "false");
+    printf("etsi on incrémente aussi l'itérateur1 de 1:\n");
+    itTmpInt++;
+    printf("itérateur1 == itérateur2 -> %s\n", itTmpInt == itInt ? "true" : "false");
+
     printf("\n----- AUTRES -----\n");
 
     printf("\nPour bien vérifier le constructeur par recopie, la seconde liste contient: ");
@@ -249,5 +283,5 @@ int main()
     printf("Et cela donne: ");
     for ( itTmpInt = listeSecond.debut(); itTmpInt != listeSecond.fin(); itTmpInt++)
         cout << *itTmpInt << " ";
-    printf("\n");
+    printf("\n\n----- FIN -----\n");
 }

@@ -7,6 +7,7 @@ class Element
 public:
     // constructeur
     Element<T>(const T &s);
+    bool operator==(Element<T> const &) const;
 
 private:
     T valeur;
@@ -15,10 +16,13 @@ private:
     Element<T> *precedent;
     Element<T> *suivant;
 
+
+
     friend class Liste<T>;
 
     friend class Iterateur<T>;
 };
+
 
 
 template<typename T>
@@ -26,6 +30,12 @@ Element<T>::Element(const T &s)
 {
     valeur = s;
     precedent = suivant = NULL;
+}
+
+template<typename T>
+bool Element<T>::operator==(const Element<T> & e) const
+{
+    return this->valeur == e.valeur;
 }
 
 template<typename T>
@@ -131,11 +141,11 @@ Liste<T>::Liste(Liste<T> &liste)
     {
         for (Iterateur<T> i = liste.debut(); i != liste.fin(); i++)
             if( i.position != nullptr )
-                this->ajouter(*i);
+                this->ajouter(i.position->valeur);
     }
     catch (exception& e)
     {
-
+        printf(e.what());
     }
 }
 
@@ -158,7 +168,7 @@ Liste<T> & Liste<T>::operator=(const Liste &l)
     {
         for (Iterateur<T> i = l.debut(); i != l.fin(); i++)
             if( i.position != nullptr )
-                this->ajouter(*i);
+                this->ajouter(i.position->valeur);
     }
     catch (exception& e)
     {
@@ -166,6 +176,12 @@ Liste<T> & Liste<T>::operator=(const Liste &l)
     }
 
     return *this;
+}
+
+template<typename T>
+bool Liste<T>::operator==(const Liste<T> & l)
+{
+    return (*this->premier) == (*l.premier) && (*this->dernier) == (*l.dernier);
 }
 
 template<typename T>
@@ -229,7 +245,11 @@ Iterateur<T> Iterateur<T>::operator--(int)
 template<typename T>
 bool Iterateur<T>::operator==(const Iterateur &b) const
 {
-    return this->position == b.position;
+    if( this->position == nullptr && b.position == nullptr ) return true;
+    if( this->position == nullptr && b.position != nullptr ) return false;
+    if( this->position != nullptr && b.position == nullptr ) return false;
+
+    return (*this->position) == (*b.position);
 }
 
 template<typename T>
