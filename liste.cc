@@ -1,3 +1,7 @@
+//
+// Created by Dimitri Dubois on 03/11/2020.
+//
+
 #include "liste.h"
 #include "Erreurs.h"
 
@@ -67,6 +71,7 @@ Iterateur<T> Liste<T>::fin() const
     Iterateur<T> it;
     it.position = NULL;
     it.dernier = dernier;
+
     return it;
 }
 
@@ -101,7 +106,10 @@ void Liste<T>::inserer(Iterateur<T> &pos, const T &s)
     elt->suivant->precedent = elt;
     elt->precedent = pos.position;
 
-    pos.position->suivant = elt;
+    if( pos.position != nullptr )
+        pos.position->suivant = elt;
+    else
+        this->premier = elt;
 
     pos.position = elt;
 }

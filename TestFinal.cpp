@@ -188,7 +188,8 @@ int main()
 
     printf("\n----- Supressions -----\n\n");
     printf("On ajoute 85 a la liste d'int...\n");
-    listeInt.ajouter(85);
+    itInt = listeInt.debut();
+    listeInt.inserer(itInt, 85);
     printf("et on va tester les supression sur celle-ci, elle contient donc cela: ");
     for ( itInt = listeInt.debut(); itInt != listeInt.fin(); itInt++)
         cout << *itInt << " ";
@@ -284,4 +285,6 @@ int main()
     for ( itTmpInt = listeSecond.debut(); itTmpInt != listeSecond.fin(); itTmpInt++)
         cout << *itTmpInt << " ";
     printf("\n\n----- FIN -----\n");
+
+    return 0;
 }

@@ -1,5 +1,5 @@
 //
-// Created by dimit on 03/11/2020.
+// Created by Dimitri Dubois on 03/11/2020.
 //
 
 #ifndef TP2LISTECHAINER_ERREURS_H
