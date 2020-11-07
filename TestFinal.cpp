@@ -2,7 +2,7 @@
 // Created by dimit on 21/10/2020.
 //
 #include <iostream>
-#include "liste.cc"
+#include "liste.cpp"
 
 int main()
 {

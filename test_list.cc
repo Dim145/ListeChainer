@@ -1,7 +1,7 @@
 #include <string>
 #include <list>
 #include <iostream>
-#include "liste.cc"
+#include "liste.cpp"
 
 using namespace std;
 
